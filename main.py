@@ -77,8 +77,7 @@ class DiscordBot(commands.Bot):
         super().__init__(
             command_prefix=commands.when_mentioned_or("$"),
             intents=intents,
-            help_command=None,
-            owner_ids=[257159805070868481]
+            help_command=None
         )
 
         self.logger = bot_logger
@@ -114,7 +113,7 @@ class DiscordBot(commands.Bot):
         if not hasattr(self, "ready_done"):
             self.ready_done = True
             self.logger.info(f"Logged in as {self.user}")
-            await self.change_presence(activity=discord.CustomActivity("/help | by @dk.y"))
+            await self.change_presence(activity=discord.CustomActivity("/help | by @dk.y & @fairi."))
 
 # ----- this code was fully taken from a template online, ive just added it in cause i intend on recreating it later -----
 # async def on_command_completion(self, context: Context) -> None:
