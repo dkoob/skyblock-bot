@@ -4,8 +4,8 @@ from datetime import datetime
 class EmbedHandler:
 
     EMBED_TYPES = {
-        "system": "808080",
-        "general": "228B22",
+        "system": "222222",
+        "general": "0059b2",
     }
 
     FOOTER_TYPES = {
@@ -14,6 +14,7 @@ class EmbedHandler:
     }
 
     DEFAULT_TYPE = "general"
+    LOGO_URL = "https://cdn.discordapp.com/attachments/1411102050300727396/1411102078314614804/image.png?ex=68b36eb8&is=68b21d38&hm=7328b9261854e919edeb07ff23ae18d551faee27a5ce13b0870348fd056050de&"
 
     @staticmethod
     def new(
@@ -44,5 +45,5 @@ class EmbedHandler:
         if image:
             embed.set_image(url=image)
 
-        embed.set_footer(text=footer_text)
+        embed.set_footer(text=footer_text, icon_url=EmbedHandler.LOGO_URL)
         return embed
