@@ -2,6 +2,7 @@
 import os
 import logging
 import platform
+from os import getenv
 
 import aiosqlite
 import discord
@@ -40,7 +41,7 @@ class ColorFormatter(logging.Formatter):
         format = format.replace("(reset)", self.reset)
         format = format.replace("(levelcolor)", log_color)
         # this is a very rough way to do this, but i wanted different colors in the logging messages and didnt feel like doing a whole function for it
-        if record.name is not "discord_bot":
+        if record.name != "discord_bot":
             format = format.replace("(namecolor)", self.purple + self.bold)
         else:
             format = format.replace("(namecolor)", self.cyan + self.bold)
@@ -60,11 +61,13 @@ def setup_logger(name: str, level=logging.INFO):
     return logger
 
 bot_logger = setup_logger("discord_bot")
-discord_loggers = ["discord", "discord.client", "discord.gateway", "discord.ext.commands.bot"]
+discord_loggers = ["discord", "discord.client", "discord.gateway", "discord.ext.commands.bot", "discord.app_commands.tree", "discord.http"]
 for name in discord_loggers:
     setup_logger(name)
 
 intents = discord.Intents.default()
+intents.members = True
+intents.messages = True
 
 class DiscordBot(commands.Bot):
     def __init__(self) -> None:
@@ -88,6 +91,11 @@ class DiscordBot(commands.Bot):
                     self.logger.info(f"Loaded extension '{extension}'")
                 except Exception as e:
                     self.logger.error(f"Failed to load extension {extension}: {type(e).__name__}: {e}")
+
+        guild = discord.Object(getenv("DEV_SERVER_ID"))
+        self.tree.copy_global_to(guild=guild)
+        synced = await self.tree.sync(guild=guild)
+        self.logger.info(f"Synced {len(synced)} command(s) to dev guild {getenv('DEV_SERVER_ID')}")
 
     async def setup_hook(self) -> None:
         self.logger.info(f"Logged in as {self.user.name}")
