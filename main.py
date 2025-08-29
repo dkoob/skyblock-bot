@@ -12,9 +12,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-system_embed_hex = "808080"
-main_embed_hex = "228B22"
-
 class ColorFormatter(logging.Formatter):
     # Colors
     black = "\x1b[30m"
@@ -95,10 +92,10 @@ class DiscordBot(commands.Bot):
                 except Exception as e:
                     self.logger.error(f"Failed to load extension {extension}: {type(e).__name__}: {e}")
 
-        guild = discord.Object(getenv("DEV_SERVER_ID"))
-        self.tree.copy_global_to(guild=guild)
-        synced = await self.tree.sync(guild=guild)
-        self.logger.info(f"Synced {len(synced)} command(s) to dev guild {getenv('DEV_SERVER_ID')}")
+        # guild = discord.Object(getenv("DEV_SERVER_ID"))
+        # self.tree.copy_global_to(guild=guild)
+        # synced = await self.tree.sync(guild=guild)
+        # self.logger.info(f"Synced {len(synced)} command(s) to dev guild {getenv('DEV_SERVER_ID')}")
 
     async def setup_hook(self) -> None:
         self.logger.info(f"Logged in as {self.user.name}")

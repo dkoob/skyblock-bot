@@ -3,6 +3,8 @@ from os import getenv
 import discord
 from discord.ext import commands
 
+from utilities.embedhandler import EmbedHandler
+
 GUILD_ID = getenv("DEV_SERVER_ID")
 
 class Example(commands.Cog):
@@ -16,7 +18,14 @@ class Example(commands.Cog):
     # Define the command normally
     @discord.app_commands.command(name="hello", description="Say hello to the bot!")
     async def hello(self, interaction: discord.Interaction):
-        await interaction.response.send_message(f"Hello, {interaction.user.mention}!")
+        embed = EmbedHandler.new(
+            title="Hello!",
+            fields=[
+                ("Description", f"Hello, {interaction.user.mention}!", False),
+            ],
+            embed_type="general"
+        )
+        await interaction.response.send_message(embed=embed)
 
 async def setup(bot: commands.Bot):
     cog = Example(bot)
