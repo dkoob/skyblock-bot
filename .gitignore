@@ -208,3 +208,6 @@ __marimo__/
 
 # Watchdog files for me (mac qol stuff, not important)
 run.py
+
+# IDEA files from pycharm
+.idea

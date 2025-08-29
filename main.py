@@ -12,6 +12,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+system_embed_hex = "808080"
+main_embed_hex = "228B22"
+
 class ColorFormatter(logging.Formatter):
     # Colors
     black = "\x1b[30m"
@@ -72,9 +75,10 @@ intents.messages = True
 class DiscordBot(commands.Bot):
     def __init__(self) -> None:
         super().__init__(
-            command_prefix=commands.when_mentioned_or("/"),
+            command_prefix=commands.when_mentioned_or("$"),
             intents=intents,
             help_command=None,
+            owner_ids=[257159805070868481]
         )
 
         self.logger = bot_logger
