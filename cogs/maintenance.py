@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
-from __main__ import system_embed_hex
 import os
+from utilities.embedhandler import EmbedHandler
 
 DEV_IDS = [424833537699610634, 257159805070868481]
 
@@ -22,18 +22,26 @@ class Maintenance(commands.Cog, name="maintenance"):
     async def sync(self, ctx: commands.Context, scope: str) -> None:
         if scope == "global":
             await ctx.bot.tree.sync()
-            embed = discord.Embed(
-                description="Commands have been synced globally",
-                color=int(system_embed_hex, 16),
+            embed = EmbedHandler.new(
+                title="Sync Command",
+                fields=[
+                    ("Scope", "Global", True),
+                    ("Description", "Slash commands have been synced globally.", False),
+                ],
+                embed_type="system"
             )
             await ctx.send(embed=embed)
         elif scope == "guild":
             ctx.bot.tree.clear_commands(guild=ctx.guild)
             ctx.bot.tree.copy_global_to(guild=ctx.guild)
             await ctx.bot.tree.sync(guild=ctx.guild)
-            embed = discord.Embed(
-                description="Commands have been synced in this guild only",
-                color=int(system_embed_hex, 16),
+            embed = EmbedHandler.new(
+                title="Sync Command",
+                fields=[
+                    ("Scope", "Guild", True),
+                    ("Description", "Slash commands have been synced in this guild only.", False),
+                ],
+                embed_type="system"
             )
             await ctx.send(embed=embed)
         else:
@@ -53,17 +61,25 @@ class Maintenance(commands.Cog, name="maintenance"):
             for cmd in list(ctx.bot.tree.get_commands(guild=None)):
                 ctx.bot.tree.remove_command(cmd.name, guild=None)
             await ctx.bot.tree.sync(guild=None)
-            embed = discord.Embed(
-                description="Commands have been unsynced globally",
-                color=int(system_embed_hex, 16),
+            embed = EmbedHandler.new(
+                title="Unsync Command",
+                fields=[
+                    ("Scope", "Global", True),
+                    ("Description", "Slash commands have been unsynced globally.", False),
+                ],
+                embed_type="system"
             )
             await ctx.send(embed=embed)
         elif scope == "guild":
             ctx.bot.tree.clear_commands(guild=ctx.guild)
             await ctx.bot.tree.sync(guild=ctx.guild)
-            embed = discord.Embed(
-                description="Commands have been unsynced in this guild only",
-                color=int(system_embed_hex, 16),
+            embed = EmbedHandler.new(
+                title="Unsync Command",
+                fields=[
+                    ("Scope", "Guild", True),
+                    ("Description", "Slash commands have been unsynced in this guild only.", False),
+                ],
+                embed_type="system"
             )
             await ctx.send(embed=embed)
         else:
