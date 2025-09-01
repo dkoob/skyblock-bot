@@ -74,7 +74,7 @@ class DiscordBot(commands.Bot):
         super().__init__(
             command_prefix=commands.when_mentioned_or("$"),
             intents=intents,
-            help_command=None
+            help_command=None,
         )
 
         self.logger = bot_logger
@@ -102,6 +102,26 @@ class DiscordBot(commands.Bot):
         # self.logger.info(f"Synced {len(synced)} command(s) to dev guild {getenv('DEV_SERVER_ID')}")
 
     async def setup_hook(self) -> None:
+        self.database = await aiosqlite.connect("prices.db")
+        self.logger.info(f"Connected to database: prices.db")
+
+        
+        async with self.database.cursor() as cursor:
+            await cursor.execute(
+                """
+                CREATE TABLE IF NOT EXISTS prices (
+                    list_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    item_name TEXT NOT NULL,
+                    condition TEXT NOT NULL,
+                    threshold REAL NOT NULL,
+                    track_type TEXT NOT NULL
+                )
+                """
+            )
+        await self.database.commit()
+        self.logger.info("Database initialized.")
+
         self.logger.info(f"Logged in as {self.user.name}")
         self.logger.info(f"discord.py API version: {discord.__version__}")
         self.logger.info(f"Python version: {platform.python_version()}")
@@ -109,6 +129,7 @@ class DiscordBot(commands.Bot):
             f"Running on: {platform.system()} {platform.release()} ({os.name})"
         )
         await self.load_cogs()
+
 
     async def on_ready(self):
         if not hasattr(self, "ready_done"):
