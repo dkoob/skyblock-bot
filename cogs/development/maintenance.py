@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import os
-from utilities.embedhandler import EmbedHandler
+from utilities.embedhandler import *
 
 DEV_IDS = [424833537699610634, 257159805070868481]
 

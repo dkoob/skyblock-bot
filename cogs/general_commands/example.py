@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 from discord.ui import Button, View
 
-from utilities.embedhandler import EmbedHandler, ButtonHandler
+from utilities.embedhandler import *
 
 GUILD_ID = getenv("DEV_SERVER_ID")
 
