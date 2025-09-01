@@ -16,7 +16,7 @@ class Maintenance(commands.Cog, name="maintenance"):
 
     @commands.command(
         name="sync",
-        help="Syncs all bot commands globally or in this guild",
+        description="Syncs all bot commands globally or in this guild",
     )
     @prefix_check
     async def sync(self, ctx: commands.Context, scope: str) -> None:
@@ -28,7 +28,8 @@ class Maintenance(commands.Cog, name="maintenance"):
                     ("Scope", "Global", True),
                     ("Description", "Slash commands have been synced globally.", False),
                 ],
-                embed_type="system"
+                embed_type="system",
+                footer="Maintenance command"
             )
             await ctx.send(embed=embed)
         elif scope == "guild":
@@ -53,7 +54,7 @@ class Maintenance(commands.Cog, name="maintenance"):
 
     @commands.command(
         name="unsync",
-        help="Unsyncs all bot commands globally or in this guild",
+        description="Unsyncs all bot commands globally or in this guild",
     )
     @prefix_check
     async def unsync(self, ctx: commands.Context, scope: str) -> None:

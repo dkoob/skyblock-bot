@@ -1,9 +1,11 @@
+import asyncio
 from os import getenv
 
 import discord
 from discord.ext import commands
+from discord.ui import Button, View
 
-from utilities.embedhandler import EmbedHandler
+from utilities.embedhandler import EmbedHandler, ButtonHandler
 
 GUILD_ID = getenv("DEV_SERVER_ID")
 
@@ -23,9 +25,28 @@ class Example(commands.Cog):
             fields=[
                 ("Description", f"Hello, {interaction.user.mention}!", False),
             ],
-            embed_type="general"
+            embed_type="general",
+            footer="By @dk.y and @fairi.",
         )
-        await interaction.response.send_message(embed=embed)
+        embed_new = EmbedHandler.new(
+            title="Edited Embed!",
+            fields=[
+                ("Description", f"Hello again, {interaction.user.mention}!", False),
+            ],
+            embed_type="system",
+            footer="I can change the footer too :)",
+        )
+        async def button_callback(interaction: discord.Interaction):
+            await interaction.response.defer()
+            await interaction.message.edit(embed=embed_new)
+        button = ButtonHandler.new(
+            label="Test Button",
+            style="success",
+            custom_id="test_button",
+            callback=button_callback,
+            wrap_in_view=True
+        )
+        await interaction.response.send_message(embed=embed, view=button)
 
 async def setup(bot: commands.Bot):
     cog = Example(bot)
