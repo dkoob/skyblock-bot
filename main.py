@@ -82,15 +82,19 @@ class DiscordBot(commands.Bot):
         self.invite_link = os.getenv("INVITE_LINK")
 
     async def load_cogs(self) -> None:
-        cogs_path = os.path.join(os.path.dirname(__file__), "cogs")
-        for file in os.listdir(cogs_path):
-            if file.endswith(".py") and file != "__init__.py":
-                extension = file[:-3]
-                try:
-                    await self.load_extension(f"cogs.{extension}")
-                    self.logger.info(f"Loaded extension '{extension}'")
-                except Exception as e:
-                    self.logger.error(f"Failed to load extension {extension}: {type(e).__name__}: {e}")
+        cogs_root = os.path.join(os.path.dirname(__file__), "cogs")
+
+        for root, dirs, files in os.walk(cogs_root):
+            for file in files:
+                if file.endswith(".py") and file != "__init__.py":
+                    relative_path = os.path.relpath(root, os.path.dirname(__file__))
+                    module_path = relative_path.replace(os.path.sep, ".") + "." + file[:-3]
+
+                    try:
+                        await self.load_extension(module_path)
+                        self.logger.info(f"Loaded extension '{module_path}'")
+                    except Exception as e:
+                        self.logger.error(f"Failed to load extension '{module_path}': {type(e).__name__}: {e}")
 
         # guild = discord.Object(getenv("DEV_SERVER_ID"))
         # self.tree.copy_global_to(guild=guild)
