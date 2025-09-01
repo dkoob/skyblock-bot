@@ -12,9 +12,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-system_embed_hex = "808080"
-main_embed_hex = "228B22"
-
 class ColorFormatter(logging.Formatter):
     # Colors
     black = "\x1b[30m"
@@ -78,7 +75,6 @@ class DiscordBot(commands.Bot):
             command_prefix=commands.when_mentioned_or("$"),
             intents=intents,
             help_command=None,
-            owner_ids=[257159805070868481]
         )
 
         self.logger = bot_logger
@@ -100,10 +96,10 @@ class DiscordBot(commands.Bot):
                     except Exception as e:
                         self.logger.error(f"Failed to load extension '{module_path}': {type(e).__name__}: {e}")
 
-        guild = discord.Object(getenv("DEV_SERVER_ID"))
-        self.tree.copy_global_to(guild=guild)
-        synced = await self.tree.sync(guild=guild)
-        self.logger.info(f"Synced {len(synced)} command(s) to dev guild {getenv('DEV_SERVER_ID')}")
+        # guild = discord.Object(getenv("DEV_SERVER_ID"))
+        # self.tree.copy_global_to(guild=guild)
+        # synced = await self.tree.sync(guild=guild)
+        # self.logger.info(f"Synced {len(synced)} command(s) to dev guild {getenv('DEV_SERVER_ID')}")
 
     async def setup_hook(self) -> None:
         self.database = await aiosqlite.connect("prices.db")
@@ -139,7 +135,7 @@ class DiscordBot(commands.Bot):
         if not hasattr(self, "ready_done"):
             self.ready_done = True
             self.logger.info(f"Logged in as {self.user}")
-            await self.change_presence(activity=discord.CustomActivity("/help | by @dk.y"))
+            await self.change_presence(activity=discord.CustomActivity("/help | by @dk.y & @fairi."))
 
 # ----- this code was fully taken from a template online, ive just added it in cause i intend on recreating it later -----
 # async def on_command_completion(self, context: Context) -> None:
